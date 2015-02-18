@@ -1,0 +1,7 @@
+# Created by .gitignore support plugin (hsz.mobi)
+### Laravel template
+/bootstrap/compiled.php
+.env.*.php
+.env.php
+.idea/
+
