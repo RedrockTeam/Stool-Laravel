@@ -1,0 +1,16 @@
+{
+  "name": "Stool-Laravel",
+  "version": "0.0.1",
+  "homepage": "https://github.com/RedrockTeam/Stool-Laravel",
+  "authors": [
+    "andycall"
+  ],
+  "description": "",
+  "keywords": [
+    "laravel"
+  ],
+  "license": "Apache",
+  "dependencies": {
+
+  }
+}
