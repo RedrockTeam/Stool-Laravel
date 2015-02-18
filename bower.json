@@ -11,6 +11,6 @@
   ],
   "license": "Apache",
   "dependencies": {
-
+    "bootstrap": "~3.3.2"
   }
 }

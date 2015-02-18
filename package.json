@@ -1,7 +1,7 @@
 {
   "name": "Stool-Laravel",
   "version": "0.0.1",
-  "homepage": "https://github.com/RedrockTeam/Stool-Laravel",
+  "repository": "https://github.com/RedrockTeam/Stool-Laravel",
   "authors": [
     "andycall"
   ],
@@ -9,8 +9,10 @@
   "keywords": [
     "laravel"
   ],
-  "dependencies" : {
-
+  "dependencies": {
+    "colors": "^1.0.3",
+    "lodash": "^3.2.0",
+    "matchdep": "^0.3.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

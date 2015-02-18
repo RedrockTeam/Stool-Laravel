@@ -13,9 +13,6 @@
     {{-- 网站内容组件块 --}}
     @yield('content')
 
-    {{-- 网站底部组件块 --}}
-    @yield('footer')
-
     {{--Javascript--}}
     @yield('script')
 </body>
