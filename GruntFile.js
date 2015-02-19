@@ -18,7 +18,25 @@ var path = require("path"),
 				build : buildDirectory,
 				work : workDirectory
 			},
-
+			browserSync: {
+				server : {
+					bsFiles: {
+						src : ['app/views/**/*.blade.php' ,'app/views/**/*.css', 'app/views/**/*.js']
+					},
+					options: {
+						proxy : config.proxy,
+						watchTask: true
+					}
+				}
+			},
+			jshint : {
+				files : {
+					src : ['app/views/**/*.js']
+				},
+				options : {
+					jshintrc : true
+				}
+			},
 			copy : {
 				js : {
 					expand : true,
@@ -36,7 +54,21 @@ var path = require("path"),
 				}
 			},
 
-			uglify : {},
+			uglify : {
+				target : {
+					options : {
+						sourceMap : true
+					},
+					files : [{
+						expand : true,
+						cwd : "app/views",
+						src : "**/*.js",
+						dest :  "public/js",
+						ext : ".js",
+						filter : "isFile"
+					}]
+				}
+			},
 
 			less : {
 				target : {
@@ -95,6 +127,7 @@ var path = require("path"),
 		grunt.initConfig(config);
 
 
+		grunt.registerTask('default', ['watch']);
 
 	};
 
