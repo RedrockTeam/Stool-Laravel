@@ -17,10 +17,11 @@ var config = {
 	 * 选择使用的CSS预编译器
 	 * 参数：
 	 *      none 纯css
-	 *      less less编译
-	 *      sass sass编译
+	 *      less less编译与css
+	 *      sass sass编译与css
+	 *      less|sass 既有sass也有less，同样也支持CSS
 	 */
-	cssCompile : "less",
+	cssCompile : "sass|less",
 	/**
 	 * ---------------------------------------------------------
 	 * 开发环境
@@ -30,7 +31,7 @@ var config = {
 	    * development 开发环境， 代码不会压缩， 保留所有注释
 	    * production  生产环境， 压缩代码， 移除注释， 根本没法看！！
 	 */
-	environment : "production",
+	environment : "development",
 	/**
 	 * ---------------------------------------------------------
 	 * 网络代理

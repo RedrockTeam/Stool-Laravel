@@ -3,7 +3,7 @@ var path = require("path"),
 	_    = require('lodash'),
 	colors = require('colors'),
 	config = require('./config'),
-	environment = config.environment === 'production';
+	isProduction = config.environment === 'production';
 
 
 	configGrunt = function(grunt) {
@@ -39,14 +39,29 @@ var path = require("path"),
 					cwd: 'app/views',
 					src: ['**/*.js'],
 					dest: 'public/js',
-					ext :".js"
+					ext : isProduction ?  ".min.js" : ".js"
 				},
 				css : {
 					expand : true,
 					cwd: 'app/views',
 					src: ['**/*.css'],
 					dest: 'public/css',
-					ext :".css"
+					ext : isProduction ?  ".min.css" : ".css"
+				}
+			},
+			sass : {
+				dist : {
+					options : {
+						style : isProduction ? 'compressed' : 'expanded'
+					},
+					files : [{
+						expand : true,
+						cwd : "app/views",
+						src : "**/*.scss",
+						dest : "public/css",
+						ext :  isProduction ? '.min.css' : ".css",
+						filter : "isFile"
+					}]
 				}
 			},
 			uglify : {
@@ -69,15 +84,26 @@ var path = require("path"),
 					options : {
 						path : ['app/views'],
 						ieCompat : true,
-						compress : environment
+						compress : isProduction
 					},
 					files: [{
 						expand : true,
 						cwd : "app/views",
 						src : "**/*.less",
 						dest : "public/css",
-						ext : '.css',
+						ext :  isProduction ?  '.min.css' : ".css",
 						filter : "isFile"
+					}]
+				}
+			},
+			cssmin: {
+				target: {
+					files: [{
+						expand: true,
+						cwd: 'public/css',
+						src: ['**/*.css'],
+						dest: 'public/css',
+						ext: '.min.css'
 					}]
 				}
 			},
@@ -117,7 +143,7 @@ var path = require("path"),
 							task.push('jshint');
 						}
 
-						if(environment){
+						if(isProduction){
 							task.push('uglify');
 						}
 						else{
@@ -132,8 +158,13 @@ var path = require("path"),
 					tasks : (function(config){
 						var tasks = [];
 
-						if(tasks.cssCompile !== 'none'){
-							tasks.push(config.cssCompile);
+						if(config.cssCompile !== 'none'){
+							if(config.cssCompile.split('|').length > 1){
+								tasks = tasks.concat(config.cssCompile.split('|'));
+							}
+							else{
+								tasks.push(config.cssCompile);
+							}
 						}
 						else{
 							tasks.push('sync:css');
@@ -156,18 +187,26 @@ var path = require("path"),
 		});
 
 		grunt.registerTask('build', "编译所有文件", function(){
+
+			grunt.task.run('copy:css');
 			if(config.cssCompile !== 'none'){
-				grunt.task.run(config.cssCompile);
+				if(config.cssCompile.split('|').length > 1){
+					grunt.task.run(config.cssCompile.split('|'));
+				}
+				else{
+					grunt.task.run(config.cssCompile);
+				}
 			}
-			else{
-				grunt.task.run('copy:css');
+			if(isProduction){
+				grunt.task.run('cssmin');
 			}
+
 
 			if(config.jshint){
 				grunt.task.run('jshint');
 			}
 
-			if(environment){
+			if(isProduction){
 				grunt.task.run('uglify');
 			}
 			else{
@@ -175,6 +214,4 @@ var path = require("path"),
 			}
 		});
 	};
-
-
 module.exports  = configGrunt;
