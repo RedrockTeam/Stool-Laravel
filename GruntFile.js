@@ -3,7 +3,10 @@ var path = require("path"),
 	_    = require('lodash'),
 	colors = require('colors'),
 	config = require('./config'),
-	isProduction = config.environment === 'production';
+	isProduction = config.environment === 'production',
+	mozjpeg = require('imagemin-mozjpeg'),
+	advpng = require('imagemin-advpng'),
+	jpegRecompress = require('imagemin-jpeg-recompress');
 
 
 	configGrunt = function(grunt) {
@@ -107,6 +110,45 @@ var path = require("path"),
 					}]
 				}
 			},
+			imagemin : {
+				dist : {
+					options : {
+						optimizationLevel : config.imageLevel,
+						use : [advpng({ optimizationLevel: 4 }), jpegRecompress({
+							quality : (function(config){
+								var level = config.imageLevel;
+								if(level > 5){
+									return 'low';
+								}
+								else if(5 > level && level > 3){
+									return 'medium';
+								}
+								else{
+									return 'high';
+								}
+							})(config),
+							method : (function(config){
+								var level = config.imageLevel;
+								if(level > 5 ){
+									return 'smallfry';
+								}
+								else if(5 > level && level > 3){
+									return "ssim"
+								}
+								else{
+									return 'mpe'
+								}
+							})(config)
+						})]
+					},
+					files : [{
+						expand : true,
+						cwd: 'app/views',                   // Src matches are relative to this path
+						src: ['**/*.{png,jpg,gif}'],   // Actual patterns to match
+						dest: 'public/image'
+					}]
+				}
+			},
 			sync: {
 				js: {
 					files: [{
@@ -134,6 +176,10 @@ var path = require("path"),
 				}
 			},
 			watch : {
+				image : {
+					files : ['app/views/**/**.{jpg,png,gif}'],
+					tasks : ['imagemin']
+				},
 				scripts : {
 					files : ['app/views/**/*.js'],
 					tasks : (function(config){
@@ -188,30 +234,35 @@ var path = require("path"),
 
 		grunt.registerTask('build', "编译所有文件", function(){
 
-			grunt.task.run('copy:css');
+			grunt.task.run('newer:copy:css');
 			if(config.cssCompile !== 'none'){
 				if(config.cssCompile.split('|').length > 1){
-					grunt.task.run(config.cssCompile.split('|'));
+					grunt.task.run(config.cssCompile.split('|').map(function(value){
+						return 'newer:' + value;
+					}));
 				}
 				else{
-					grunt.task.run(config.cssCompile);
+					grunt.task.run('newer:' + config.cssCompile);
 				}
 			}
 			if(isProduction){
-				grunt.task.run('cssmin');
+				grunt.task.run('newer:cssmin');
 			}
 
 
 			if(config.jshint){
-				grunt.task.run('jshint');
+				grunt.task.run('newer:jshint');
 			}
 
 			if(isProduction){
-				grunt.task.run('uglify');
+				grunt.task.run('newer:uglify');
 			}
 			else{
-				grunt.task.run('copy:js');
+				grunt.task.run('newer:copy:js');
 			}
+
+			grunt.task.run('imagemin');
+
 		});
 	};
 module.exports  = configGrunt;
