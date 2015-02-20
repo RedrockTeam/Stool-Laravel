@@ -2,24 +2,20 @@ var path = require("path"),
 	fs   = require('fs'),
 	_    = require('lodash'),
 	colors = require('colors'),
-	buildDirectory = path.resolve(process.cwd(), 'public'),
-	workDirectory = path.resolve(process.cwd(), 'app/views'),
 	config = require('./config'),
-	environment = config.environment === 'development';
+	environment = config.environment === 'production';
+
+
 	configGrunt = function(grunt) {
+
 		colors.setTheme({silly: 'rainbow'});
 
 		require('matchdep').filterDev(['grunt-*', '!grunt-cli']).forEach(grunt.loadNpmTasks);
 
-		var config = {
+		var gruntConfig = {
 			pkg : grunt.file.readJSON('package.json'),
-
-			paths : {
-				build : buildDirectory,
-				work : workDirectory
-			},
 			browserSync: {
-				server : {
+				proxy : {
 					bsFiles: {
 						src : ['app/views/**/*.blade.php' ,'app/views/**/*.css', 'app/views/**/*.js']
 					},
@@ -53,7 +49,6 @@ var path = require("path"),
 					ext :".css"
 				}
 			},
-
 			uglify : {
 				target : {
 					options : {
@@ -69,7 +64,6 @@ var path = require("path"),
 					}]
 				}
 			},
-
 			less : {
 				target : {
 					options : {
@@ -87,29 +81,42 @@ var path = require("path"),
 					}]
 				}
 			},
-
+			sync: {
+				main: {
+					files: [{
+						cwd: 'app/views',
+						src: [
+							'**/*.js' /* but exclude txt files */
+						],
+						dest: 'public/js',
+						ext : ".js"
+					}],
+					pretend: false, // Don't do any IO. Before you run the task with `updateAndDelete` PLEASE MAKE SURE it doesn't remove too much.
+					verbose: true // Display log messages when copying files
+				}
+			},
 			watch : {
 				scripts : {
-					files : buildDirectory + "/**/*.js",
+					files : ['app/views/**/*.js'],
 					tasks : (function(config){
-						var tasks = [];
+						var task = [];
 
 						if(config.jshint){
-							tasks.push('jshint');
+							task.push('jshint');
 						}
 
 						if(environment){
-							tasks.concat(['uplify']);
+							task.push('uglify');
 						}
 						else{
-							tasks.concat(['copy:js']);
+							task.push('sync');
 						}
 
-						return tasks;
+						return task;
 					})(config)
 				},
 				css : {
-					files : buildDirectory + "**/*.css",
+					files : ['app/views/**/*.scss', 'app/views/**/*.css', 'app/views/**/*.less'],
 					tasks : (function(config){
 						var tasks = [];
 
@@ -119,17 +126,19 @@ var path = require("path"),
 						else{
 							tasks.push('copy:css');
 						}
+
+						return tasks;
 					})(config)
 				}
 			}
 		};
 
-		grunt.initConfig(config);
+		grunt.initConfig(gruntConfig);
 
+		grunt.registerTask('default', "开发默认选项" , ['browserSync', 'watch']);
 
-		grunt.registerTask('default', ['watch']);
 
 	};
 
 
-module.exports = configGrunt;
+module.exports  = configGrunt;

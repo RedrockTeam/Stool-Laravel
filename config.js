@@ -38,7 +38,7 @@ var config = {
 	 * BrowserSync 代理配置
 	 * 为被代理的服务器网络端口
 	 */
-	proxy : "localhost:8080"
+	proxy : "localhost:6890"
 
 
 };

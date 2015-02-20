@@ -1,7 +1,6 @@
 # Stool-Laravel
 基于Laravel的前端自动化构建解决方案
 
-
 ## 前期
 
 + 目录结构设计

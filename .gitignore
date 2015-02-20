@@ -5,3 +5,8 @@
 .env.php
 .idea/
 
+public/
+
+node_modules/
+vendor/
+bower_components

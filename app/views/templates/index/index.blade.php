@@ -6,7 +6,7 @@
 @stop
 
 @section("header")
-    @include("widgets/header")
+    @include("widgets/header/header")
 @stop
 
 {{--内容块--}}
@@ -19,5 +19,5 @@
 
 
 @section("css")
-    {{HTML::style("/css/h")}}
+    {{HTML::style("")}}
 @stop

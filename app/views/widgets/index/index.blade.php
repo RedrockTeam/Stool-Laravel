@@ -4,3 +4,4 @@
     @parent
     {{HTML::style("/css/widget")}}
 @stop
+
