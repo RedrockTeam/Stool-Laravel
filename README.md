@@ -1,6 +1,9 @@
 # Stool-Laravel
 基于Laravel的前端自动化构建解决方案
 
+## 文档
+[猛戳这里](https://github.com/RedrockTeam/Stool-Laravel/wiki)
+
 ## 前期
 
 + 目录结构设计

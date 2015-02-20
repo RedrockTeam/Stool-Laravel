@@ -5,7 +5,8 @@
 .env.php
 .idea/
 
-public/
+public/css
+public/js
 
 node_modules/
 vendor/

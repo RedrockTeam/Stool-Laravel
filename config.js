@@ -30,7 +30,7 @@ var config = {
 	    * development 开发环境， 代码不会压缩， 保留所有注释
 	    * production  生产环境， 压缩代码， 移除注释， 根本没法看！！
 	 */
-	environment : "development",
+	environment : "production",
 	/**
 	 * ---------------------------------------------------------
 	 * 网络代理

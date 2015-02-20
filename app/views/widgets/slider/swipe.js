@@ -1,4 +1,6 @@
 define(['jquery'], function($){
+
+/* jshint ignore:start */
 	console.log("swipe loaded");
    $.fn.slideBox = function(options) {
        //默认参数
@@ -133,4 +135,7 @@ define(['jquery'], function($){
         hideClickBar : false,//不自动隐藏点选按键
         clickBarRadius : 0
     });
+
+	/* jshint ignore:end  */
+
 });
