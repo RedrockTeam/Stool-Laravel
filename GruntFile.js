@@ -178,7 +178,7 @@ var path = require("path"),
 			watch : {
 				image : {
 					files : ['app/views/**/**.{jpg,png,gif}'],
-					tasks : ['imagemin']
+					tasks : ['newer:imagemin']
 				},
 				scripts : {
 					files : ['app/views/**/*.js'],
@@ -261,7 +261,7 @@ var path = require("path"),
 				grunt.task.run('newer:copy:js');
 			}
 
-			grunt.task.run('imagemin');
+			grunt.task.run('newer:imagemin');
 
 		});
 	};
